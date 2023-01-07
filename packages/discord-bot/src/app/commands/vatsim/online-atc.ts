@@ -2,20 +2,19 @@ import {
   CommandInteraction,
   Client,
   ApplicationCommandType,
+  APIEmbedField,
 } from 'discord.js';
-import { markdownTable } from 'markdown-table';
+// import { markdownTable } from 'markdown-table';
 import { getISODate } from '../../helpers/get-formatted-date';
 import { getOnlineAtc } from '../../services/vatsim/core-client';
 import { Command } from '../../types';
 
-const prepareResponse = (content: Array<Record<string, string>>): string => {
-  const onlineAtc = content.reduce((acc,crt) => ([
-    ...acc, 
-    [crt.name, crt.callsign, crt.frequency]
-  ]), [['Controller', 'Callsign', 'Frequency']])
-  const mkTable = markdownTable(onlineAtc)
-  return '```' + mkTable + '```'
-}
+const prepareResponse = (content: Array<Record<string, string>>): APIEmbedField[] => 
+  content.map(crt => ({
+    name: `${crt.callsign} (${crt.frequency})`,
+    value: crt.name
+  }))
+
 
 export const OnlineAtc: Command = {
   name: 'online-atc',
@@ -28,7 +27,8 @@ export const OnlineAtc: Command = {
       embeds: [
         {
           title: 'ONLINE ATC', 
-          description: content ? prepareResponse(content) : 'No ATC online :cry:',
+          description: content ? undefined : 'No ATC online :cry:',
+          fields: content ? prepareResponse(content) : undefined, 
           timestamp: getISODate()
         },
       ],
