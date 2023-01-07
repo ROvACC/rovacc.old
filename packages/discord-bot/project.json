@@ -1,0 +1,74 @@
+{
+  "name": "discord-bot",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/discord-bot/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/packages/discord-bot",
+        "main": "packages/discord-bot/src/main.ts",
+        "tsConfig": "packages/discord-bot/tsconfig.app.json",
+        "assets": ["packages/discord-bot/src/assets"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "packages/discord-bot/src/environments/environment.ts",
+              "with": "packages/discord-bot/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/js:node",
+      "options": {
+        "buildTarget": "discord-bot:build"
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "discord-bot:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/discord-bot/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/discord-bot/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        {"projects": "self", "target": "build"},
+        {"projects": "self", "target": "lint"},
+        {"projects": "self", "target": "test"}
+      ],
+      "options": {
+        "commands": [
+          "pwd",
+          "docker build  -f ./packages/discord-bot/Dockerfile . -t"
+        ]
+      }
+    }
+  },
+  "tags": []
+}
