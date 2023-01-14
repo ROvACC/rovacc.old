@@ -58,14 +58,14 @@
     "deploy": {
       "executor": "nx:run-commands",
       "dependsOn": [
-        {"projects": "self", "target": "build"},
-        {"projects": "self", "target": "lint"},
-        {"projects": "self", "target": "test"}
+        { "projects": "self", "target": "build" },
+        { "projects": "self", "target": "lint" },
+        { "projects": "self", "target": "test" }
       ],
       "options": {
         "commands": [
-          "pwd",
-          "docker build  -f ./packages/discord-bot/Dockerfile . -t"
+          "GIT_HASH=$(git rev-parse --short=11 HEAD) && docker build  -f ./packages/discord-bot/Dockerfile . -t eu.gcr.io/$PROJECT_ID/discord-bot:$GIT_HASH",
+          "GIT_HASH=$(git rev-parse --short=11 HEAD) && docker push eu.gcr.io/rovacc-operations/discord-bot:$GIT_HASH"
         ]
       }
     }

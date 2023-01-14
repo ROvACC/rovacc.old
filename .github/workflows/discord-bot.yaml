@@ -13,8 +13,8 @@ on:
       - 'packages/discord-bot/**'
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
@@ -29,17 +29,41 @@ jobs:
         run: npm ci
 
       - name: Build project
-        run: nx build discord-bot --prod
-
-      - name: Deploy to Google Cloud Run
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@main
-        with:
-          service_account_email: ${{ secrets.GOOGLE_CLOUD_RUN_SERVICE_ACCOUNT_EMAIL }}
-          service_account_key: ${{ secrets.GOOGLE_CLOUD_RUN_SERVICE_ACCOUNT_KEY }}
-          project_id: ${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
-      - name: Deploying to Cloud Run
+        run: |
+          npx nx build discord-bot --prod
+          npx nx deploy discord-bot --prod
         env:
           PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
-        run: |
-          gcloud config set project $PROJECT_ID
-          gcloud beta run deploy myapp --image gcr.io/$PROJECT_ID/discord-bot --platform managed --allow-unauthenticated
+
+      # - name: Deploy to Google Cloud Run
+      #
+      #   uses: GoogleCloudPlatform/github-actions/setup-gcloud@main
+      #   with:
+      #     service_account_email: ${{ secrets.GOOGLE_CLOUD_RUN_SERVICE_ACCOUNT_EMAIL }}
+      #     service_account_key: ${{ secrets.GOOGLE_CLOUD_RUN_SERVICE_ACCOUNT_KEY }}
+      #     project_id: ${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
+      # - name: Deploying to Cloud Run
+      #   env:
+      #     PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
+      #   run: |
+      #     gcloud config set project $PROJECT_ID
+      #     gcloud beta run deploy myapp --image gcr.io/$PROJECT_ID/discord-bot --platform managed --allow-unauthenticated
+
+  auth-in-gcp:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+      - name: Set up Cloud SDK
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          project_id: ${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
+
+      - name: Use gcloud CLI
+        run: 'gcloud info'
+
+      - name: Auth in Google Cloud Artifact
+        run: 'gcloud auth configure-docker europe-docker.pkg.dev'
