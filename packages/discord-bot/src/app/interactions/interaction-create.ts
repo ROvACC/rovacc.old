@@ -14,6 +14,7 @@ const handleSlashCommand = async (
   interaction: CommandInteraction
 ): Promise<void> => {
   const slashCommand = Commands.find((c) => c.name === interaction.commandName)
+
   if (!slashCommand) {
     interaction.followUp({
       content: `Command ${interaction.commandName} is not registered!`,
