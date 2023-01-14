@@ -3,9 +3,9 @@ import {
   Client,
   ApplicationCommandType,
   ApplicationCommandOptionType,
-} from 'discord.js';
-import { getMetar } from '../../services/met/metar';
-import { Command } from '../../types';
+} from 'discord.js'
+import { getMetar } from '../../services/met/metar'
+import { Command } from '../../types'
 
 export const Metar: Command = {
   name: 'metar',
@@ -24,9 +24,9 @@ export const Metar: Command = {
   run: async (_: Client, interaction: CommandInteraction) => {
     const icaoParam = interaction.options.data.find(
       (option) => option.name === 'icao'
-    );
-    const icao = (icaoParam.value as string).toLocaleUpperCase();
-    const content = await getMetar(icao);
+    )
+    const icao = (icaoParam.value as string).toLocaleUpperCase()
+    const content = await getMetar(icao)
     await interaction.followUp({
       ephemeral: true,
       embeds: [
@@ -35,6 +35,6 @@ export const Metar: Command = {
           description: content,
         },
       ],
-    });
+    })
   },
-};
+}

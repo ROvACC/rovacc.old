@@ -1,5 +1,5 @@
-import { CommandInteraction, Client, ApplicationCommandType } from 'discord.js';
-import { Command } from '../../types';
+import { CommandInteraction, Client, ApplicationCommandType } from 'discord.js'
+import { Command } from '../../types'
 
 export const Ping: Command = {
   name: 'ping',
@@ -9,6 +9,6 @@ export const Ping: Command = {
     await interaction.followUp({
       ephemeral: true,
       content: 'Pong!',
-    });
+    })
   },
-};
+}

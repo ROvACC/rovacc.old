@@ -3,35 +3,36 @@ import {
   Client,
   ApplicationCommandType,
   APIEmbedField,
-} from 'discord.js';
-// import { markdownTable } from 'markdown-table';
-import { getISODate } from '../../helpers/get-formatted-date';
-import { getOnlineAtc } from '../../services/vatsim/core-client';
-import { Command } from '../../types';
+} from 'discord.js'
+import { VatsimOnlineAtcApiResponse } from '@rovacc/api-responses'
+import { getISODate } from '../../helpers/get-formatted-date'
+import { getOnlineAtc } from '../../services/vatsim/core-client'
+import { Command } from '../../types'
 
-const prepareResponse = (content: Array<Record<string, string>>): APIEmbedField[] => 
-  content.map(crt => ({
+const prepareResponse = (
+  content: Array<VatsimOnlineAtcApiResponse>
+): APIEmbedField[] =>
+  content.map((crt) => ({
     name: `${crt.callsign} (${crt.frequency})`,
-    value: crt.name
+    value: crt.name,
   }))
-
 
 export const OnlineAtc: Command = {
   name: 'online-atc',
   description: 'Lists online controllers',
   type: ApplicationCommandType.ChatInput,
   run: async (_: Client, interaction: CommandInteraction) => {
-    const content = await getOnlineAtc();
+    const content = await getOnlineAtc()
     await interaction.followUp({
       ephemeral: true,
       embeds: [
         {
-          title: 'ONLINE ATC', 
+          title: 'ONLINE ATC',
           description: content ? undefined : 'No ATC online :cry:',
-          fields: content ? prepareResponse(content) : undefined, 
-          timestamp: getISODate()
+          fields: content ? prepareResponse(content) : undefined,
+          timestamp: getISODate(),
         },
       ],
-    });
+    })
   },
-};
+}
