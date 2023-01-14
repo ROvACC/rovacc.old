@@ -42,4 +42,4 @@ jobs:
           PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
         run: |
           gcloud config set project $PROJECT_ID
-          gcloud beta run deploy myapp --image gcr.io/$PROJECT_ID/myapp --platform managed --allow-unauthenticated
+          gcloud beta run deploy myapp --image gcr.io/$PROJECT_ID/discord-bot --platform managed --allow-unauthenticated

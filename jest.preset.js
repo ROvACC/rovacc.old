@@ -1,3 +1,3 @@
-import nxPreset from '@nrwl/jest/preset'
+const nxPreset = require('@nrwl/jest/preset')
 
-module.exports = { ...nxPreset };
+module.exports = { ...nxPreset }
