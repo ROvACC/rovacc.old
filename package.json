@@ -12,6 +12,7 @@
     "@angular/cli": "~15.2.0",
     "@angular/compiler-cli": "~15.2.0",
     "@angular/language-service": "~15.2.0",
+    "@google-cloud/functions-framework": "latest",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
     "@nrwl/angular": "15.9.2",
@@ -26,6 +27,7 @@
     "@nrwl/web": "15.9.2",
     "@nrwl/webpack": "15.9.2",
     "@nrwl/workspace": "15.9.2",
+    "@nx-extend/gcp-functions": "^6.5.2",
     "@schematics/angular": "~15.2.0",
     "@types/haversine": "^1.1.5",
     "@types/jest": "^29.4.0",
@@ -72,4 +74,3 @@
     "zone.js": "~0.12.0"
   }
 }
-
